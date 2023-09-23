@@ -1,53 +1,158 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 void main(List<String> args) {
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(
+    const MaterialApp(
+      title: 'Navigation Basics',
+      home: HomeScreen(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
+Color randomColor() {
+  return Color.fromARGB(
+    255,
+    Random().nextInt(255),
+    Random().nextInt(255),
+    Random().nextInt(255),
+  );
+}
+
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  int count = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // This gets called when the widget is added to the widget tree
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    // This gets called when the widget is removed from the widget tree
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
+    return const MaterialApp(
+      home: HomeScreen(),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purpleAccent.shade100,
         title: const Text('My first flutter App :)'),
       ),
-      body: const Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      body: Column(
         children: [
-          TextWidget(),
-          RowWidget(),
-          StackWidget(),
+          const ColumnWidget(),
+          ElevatedButton(
+            child: const Text('Navigate'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const ScrollableScreen(),
+                ),
+              );
+            },
+          )
         ],
       ),
-      backgroundColor: Colors.pink.shade100,
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () {
-          print('You clicked me!');
-        },
+      backgroundColor: Colors.purple.shade100,
+    );
+  }
+}
+
+class ScrollableScreen extends StatelessWidget {
+  const ScrollableScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.purpleAccent.shade100,
+        title: const Text('Second route'),
       ),
-      bottomNavigationBar: BottomNavigationBar(items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'Settings',
-        ),
-      ]),
-      drawer: const Drawer(
-        child: Text('Yo!'),
+      body: const ListViewWidget(),
+    );
+  }
+}
+
+class GridViewWidget extends StatelessWidget {
+  const GridViewWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
       ),
-    ));
+      itemBuilder: (_, index) {
+        return Container(
+          color: randomColor(),
+          width: 500,
+          height: 500,
+          child: Text('Item $index'),
+        );
+      },
+    );
+  }
+}
+
+class ListViewWidget extends StatelessWidget {
+  const ListViewWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(itemBuilder: (_, index) {
+      return Container(
+        color: randomColor(),
+        width: 500,
+        height: 500,
+        child: Text('Item $index'),
+      );
+    });
+  }
+}
+
+class ColumnWidget extends StatelessWidget {
+  const ColumnWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        TextWidget(),
+        RowWidget(),
+        StackWidget(),
+      ],
+    );
   }
 }
 
